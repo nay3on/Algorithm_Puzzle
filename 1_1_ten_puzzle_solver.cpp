@@ -4,6 +4,7 @@
 #include <string>
 #include <cmath>
 #include <utility>
+#include <set>
 using namespace std;
 
 // 역폴란드 표기법 계산식을 계산한다
@@ -88,14 +89,14 @@ string decode_poland(const string& exp) {
 // val: 4개 수를 저장한 배열, target: 만들고자 하는 수
 vector<string> solve(vector<int> val, int target) {
     // 답을 나타내는 계산기를 저장할 배열
-    vector<string> res;
+    set<string> res_set;    // 중복을 방지하기 위한 set
 
     // 역폴란드 표기법 계산식 exp를 알아보기 위한 함수 오브젝트
     const double EPS = 1e-9;    // 충분히 작은 값
     auto check = [&](const string& exp) -> void {
         // 계산 결과와 만들고자 하는 수의 값의 차가 충분히 작을 때 일치한다고 가정한다
         if (abs(calc_poland(exp) - target) < EPS)
-            res.push_back(decode_poland(exp));
+            res_set.insert(decode_poland(exp));
     };
 
     // 4개의 수 val의 정렬을 순서대로 시험한다
@@ -131,6 +132,9 @@ vector<string> solve(vector<int> val, int target) {
             }
         }
     } while (next_permutation(val.begin(), val.end()));
+
+    // set을 vector로 변환하여 반환
+    vector<string> res(res_set.begin(), res_set.end());
     return res;
 }
 
